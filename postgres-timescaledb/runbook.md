@@ -272,7 +272,7 @@ CREATE ROLE replicator WITH REPLICATION LOGIN PASSWORD 'ReplicaPass123!';
 
 Quit:\q
 ```
-# Allow replication connectinos:
+# Allow replication connections:
 ```bash
 sudo nano /etc/postgresql/12/main/pg_hba.conf
 ```
