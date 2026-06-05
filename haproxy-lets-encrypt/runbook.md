@@ -140,7 +140,7 @@
 
     -    stats uri /stats
 
-        stats refresh 10s
+      -  stats refresh 10s
 
 ##Add port 8404 in ufw:
 -sudo ufw allow 8404
@@ -149,7 +149,7 @@
 
 -http://192.168.84.54:8404/stats
 
-##LETS ENCRYPT WORK FLOW
+#LETS ENCRYPT WORK FLOW
 
 ##Certbot requests a certificate from Let's Encrypt using ACME protocal
 
