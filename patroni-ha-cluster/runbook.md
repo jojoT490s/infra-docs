@@ -1,8 +1,8 @@
 #PATRONI + HA CLUSTER
 
-#INSTALLATION
+# INSTALLATION
 
-#Postgres installation
+# Postgres installation
 ```bash
 sudo apt update
 sudo apt install -y postgresql-common
@@ -15,7 +15,7 @@ Stop postgres:
 sudo systemctl stop postgresql
 sudo systemctl disable postgresql
 ```
-#Install etcd
+# Install etcd
 ```bash
 sudo apt update
 sudo apt-get install -y wget curl
@@ -24,48 +24,48 @@ sudo apt-get install -y wget curl
 ```bash
 wget https://github.com/etcd-io/etcd/releases/download/v3.5.17/etcd-v3.5.17-linux-amd64.tar.gz
 ```
-#Uncompress and rename.
+# Uncompress and rename.
 ```bash
 tar xvf etcd-v3.5.17-linux-amd64.tar.gz
 mv etcd-v3.5.17-linux-amd64 etcd
 ```
 
-#Move all binaries into /usr/local/bin/ for later use.:
+# Move all binaries into /usr/local/bin/ for later use.:
 ```bash
 sudo mv etcd/etcd* /usr/local/bin/
 ```
-#Check version:
+# Check version:
 ```bash
 etcd --version
 ```
-#Let’s create a user for etcd service:
+# Let’s create a user for etcd service:
 ```bash
 sudo useradd --system --home /var/lib/etcd --shell /bin/false etcd
 ```
 
-#Let’s configure etcd.
-#Make dir and edit file.
+# Let’s configure etcd.
+# Make dir and edit file.
 ```bash
 sudo mkdir -p /etc/etcd
 sudo mkdir -p /etc/etcd/ssl
 ```
-#ON YOUR MACHINE
-#Make sure openssl is installed
+# ON YOUR MACHINE
+# Make sure openssl is installed
 ```bash
 sudo apt install openssl
 ```
-#Generate and configure  certs:
+# Generate and configure  certs:
 ```bash
 mkdir certs
 cd certs
 ```
-#Generate certs authority:
+# Generate certs authority:
 ```bash
 openssl genrsa -out ca.key 2048
 openssl req -x509 -new -nodes -key ca.key -subj "/CN=etcd-ca" -days 7300 -out ca.crt
 openssl genrsa -out etcd-node1.key 2048
 ```
-#Create temp file for config
+# Create temp file for config
 ```bash
 cat > temp.cnf <<EOF
 [ req ]
@@ -79,7 +79,7 @@ IP.1 = 100.98.227.25
 IP.2 = 127.0.0.1
 EOF
 ```
-#Create a csr
+# Create a csr
 ```bash
 openssl req -new -key etcd-node1.key -out etcd-node1.csr \
   -subj "/C=US/ST=YourState/L=YourCity/O=YourOrganization/OU=YourUnit/CN=etcd-node1" \
@@ -160,7 +160,7 @@ openssl req -new -key etcd-node3.key -out etcd-node3.csr \
   -subj "/C=US/ST=YourState/L=YourCity/O=YourOrganization/OU=YourUnit/CN=etcd-node3" \
   -config temp.cnf
 ```
-#Sign the cert
+# Sign the cert
 ```bash
 openssl x509 -req -in etcd-node3.csr -CA ca.crt -CAkey ca.key -CAcreateserial \
   -out etcd-node3.crt -days 7300 -sha256 -extensions v3_req -extfile temp.cnf
@@ -173,18 +173,18 @@ openssl x509 -in etcd-node3.crt -text -noout | grep -A1 "Subject Alternative Nam
 ```bash
 rm temp.cnf
 ```
-#Secure copy (scp) the certs to each node:
+# Secure copy (scp) the certs to each node:
 ```bash
 
 scp ca.crt etcd-node1.crt etcd-node1.key serveradmin@100.98.227.25:/tmp/
 scp ca.crt etcd-node2.crt etcd-node2.key serveradmin@100.88.198.128:/tmp/
 scp ca.crt etcd-node3.crt etcd-node3.key serveradmin@100.94.193.99:/tmp/
 ```
-#See files on each node:
+# See files on each node:
 ```bash
 ls /tmp
 ```
-#on each nodeSee files on each node, We need to move certs from /tmp to ssl location (/etc/etcd/ssl)
+# on each nodeSee files on each node, We need to move certs from /tmp to ssl location (/etc/etcd/ssl)
 ```bash
 sudo mkdir -p /etc/etcd/ssl
 sudo mv /tmp/etcd-node*.crt /etc/etcd/ssl/
@@ -194,19 +194,19 @@ sudo chown -R etcd:etcd /etc/etcd/
 sudo chmod 600 /etc/etcd/ssl/etcd-node*.key
 sudo chmod 644 /etc/etcd/ssl/etcd-node*.crt /etc/etcd/ssl/ca.crt
 ```
-#Check certs are there:
+# Check certs are there:
 ```bash
 ls /etc/etcd/ssl
 ```
-#Configure
+# Configure
 #Create our config
 ```bash
 sudo nano /etc/etcd/etcd.env
 ```
 
-#in the config file add
+# in the config file add
 
-#Node 1
+# Node 1
 ```bash
 ETCD_NAME="postgresql-01"
 ETCD_DATA_DIR="/var/lib/etcd"
@@ -226,7 +226,7 @@ ETCD_PEER_TRUSTED_CA_FILE="/etc/etcd/ssl/ca.crt"
 ETCD_PEER_CERT_FILE="/etc/etcd/ssl/etcd-node1.crt"
 ETCD_PEER_KEY_FILE="/etc/etcd/ssl/etcd-node1.key"
 ```
-#Node 2
+# Node 2
 ```bash
 ETCD_NAME="postgresql-02"
 ETCD_DATA_DIR="/var/lib/etcd"
@@ -246,7 +246,7 @@ ETCD_PEER_TRUSTED_CA_FILE="/etc/etcd/ssl/ca.crt"
 ETCD_PEER_CERT_FILE="/etc/etcd/ssl/etcd-node2.crt"
 ETCD_PEER_KEY_FILE="/etc/etcd/ssl/etcd-node2.key"
 ```
-#Node 3
+# Node 3
 ```bash
 ETCD_NAME="postgresql-03"
 ETCD_DATA_DIR="/var/lib/etcd"
@@ -271,7 +271,7 @@ ETCD_PEER_KEY_FILE="/etc/etcd/ssl/etcd-node3.key"
 ```bash
 sudo nano /etc/systemd/system/etcd.service
 ```
-#Add:
+# Add:
 ```bash
 [Unit]
 Description=etcd key-value store
@@ -293,13 +293,13 @@ Group=etcd
 [Install]
 WantedBy=multi-user.target
 ```
-#We need to create a directory for etcd ETCD_DATA_DIR defined in service file.
+# We need to create a directory for etcd ETCD_DATA_DIR defined in service file.
 ```bash
 sudo mkdir -p /var/lib/etcd 
 sudo chown -R etcd:etcd /var/lib/etcd
 ```
 
-#Reload and start
+# Reload and start
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl enable etcd
@@ -307,11 +307,11 @@ sudo systemctl enable etcd
 sudo systemctl start etcd
 sudo systemctl status etcd
 ```
-#Check Logs:
+# Check Logs:
 ```bash
 journalctl -xeu etcd.service
 ```
-#Once cluster is running, we should verify it’s working on each by running
+# Once cluster is running, we should verify it’s working on each by running
 ```bash
 sudo ETCDCTL_API=3 etcdctl \
 --endpoints=https://100.98.227.25:2379 \
@@ -320,7 +320,7 @@ sudo ETCDCTL_API=3 etcdctl \
 --key=/etc/etcd/ssl/etcd-node1.key \
 endpoint health
 ```
-#To see member lists:
+# To see member lists:
 ```bash
 sudo etcdctl \
 --endpoints=https://100.98.227.25:2379 \
@@ -329,7 +329,7 @@ sudo etcdctl \
 --key=/etc/etcd/ssl/etcd-node1.key \
 member list
 ```
-#To check for the leader:
+# To check for the leader:
 ```bash
 sudo etcdctl   --endpoints=http://100.98.227.25:2379,http://100.88.198.128:2379,http://100.94.193.99:2379   --cacert=/etc/etcd/ssl/ca.crt   --cert=/etc/etcd/ssl/etcd-node1.crt   --key=/etc/etcd/ssl/etcd-node1.key   endpoint status --write-out=table
 ```
@@ -341,7 +341,7 @@ sudo mkdir -p /var/lib/postgresql/data
 sudo mkdir -p /var/lib/postgresql/ssl
 ```
 
-#On your laptop
+# On your laptop
 
 #Generate a self-signed certificate
 
@@ -413,7 +413,7 @@ sudo apt install -y patroni
 
 sudo mkdir -p /etc/patroni/
 ```
-#Configuring Patroni
+# Configuring Patroni
 
 #Create a config file and edit
 	
@@ -650,7 +650,7 @@ curl -k https://100.98.227.25:8008/primary
 curl -k https://100.88.198.128:8008/primary
 curl -k https://100.94.193.99:8008/primary
 ```
-#HA Proxy
+# HA Proxy
 
 #Installing HA Proxy
 
@@ -856,7 +856,7 @@ sudo journalctl -u keepalived -f
 ```bash
 ping 192.168.60.110
 ```
-#Connecting with PGAdmin
+# Connecting with PGAdmin
 
 #Connected with a client
 ```bash
