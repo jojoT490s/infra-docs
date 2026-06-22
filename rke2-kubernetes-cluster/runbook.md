@@ -39,7 +39,7 @@ ls /etc/rancher/rke2
 write-kubeconfig-mode: "0644"
 ```
 # move kubectl
-# Kubectl is installed but in a different directory  so we need to make sure its in the right  place:
+#Kubectl is installed but in a different directory  so we need to make sure its in the right  place:
 # First exit root
 ```bash 
 exit
