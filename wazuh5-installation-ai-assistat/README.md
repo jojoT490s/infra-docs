@@ -7,16 +7,16 @@ We used wazuh documentation  guide  step by step method
 **Download the `wazuh-certs-tool-5.0.0-beta5.sh` script and the `config.yml` configuration file. This creates the certificates that encrypt communications between the Wazuh central components:**
 
  ```bash
- curl \-sO [https\://packages-staging.xdrsiem.wazuh.info/pre-release/5.x/installation-assistant/wazuh-certs-tool-5.0.0-beta5.sh](https://packages-staging.xdrsiem.wazuh.info/pre-release/5.x/installation-assistant/wazuh-certs-tool-5.0.0-beta5.sh)**
+ curl \-sO [https\://packages-staging.xdrsiem.wazuh.info/pre-release/5.x/installation-assistant/wazuh-certs-tool-5.0.0-beta5.sh](https://packages-staging.xdrsiem.wazuh.info/pre-release/5.x/installation-assistant/wazuh-certs-tool-5.0.0-beta5.sh)
 
-**curl \-o config.yml https\://packages-staging.xdrsiem.wazuh.info/pre-release/5.x/installation-assistant/config-5.0.0-beta5.yml**
+curl \-o config.yml https\://packages-staging.xdrsiem.wazuh.info/pre-release/5.x/installation-assistant/config-5.0.0-beta5.yml
 ```
 1. 
 
 **Edit `./config.yml` and replace the node names and IP values with the corresponding names and IP addresses. You need to do this for all Wazuh manager, Wazuh indexer, and Wazuh dashboard nodes. Add as many node fields as needed:**  
 **Open   the yaml**  
  ```bash
- **nano ./config .yml**
+ nano ./config .yml
 ```
  **nodes:**  
   **\# Wazuh indexer nodes**  
@@ -53,14 +53,14 @@ We used wazuh documentation  guide  step by step method
 
 **Run `./wazuh-certs-tool-5.0.0-beta5.sh` to create the certificates. For a multi-node cluster, these certificates need to be later deployed to all Wazuh instances in your cluster:**
 ```bash
- **bash ./wazuh-certs-tool-5.0.0-beta5.sh \-A**
+ bash ./wazuh-certs-tool-5.0.0-beta5.sh \-A
 ```
 3. 
 
 **Compress all the necessary files:**
 ```bash
- **tar \-cvf ./wazuh-certificates.tar \-C ./wazuh-certificates/ .**  
-**rm \-rf ./wazuh-certificates**
+ tar \-cvf ./wazuh-certificates.tar \-C ./wazuh-certificates/ .
+rm \-rf ./wazuh-certificates
 ```
 **NOTE : MAKE A  COPY OF THE TAR FILE  YOU WILL NEED THE CERTIFICATES**
 
@@ -77,7 +77,7 @@ We used wazuh documentation  guide  step by step method
 
  **APTYumDNF**  
 ```bash
-**apt install debconf adduser procps curl**
+apt install debconf adduser procps curl
 ```
 1. 
 
@@ -87,25 +87,25 @@ We used wazuh documentation  guide  step by step method
 
 **Install the following packages if missing:**
 ```bash
- **apt-get install \-y gnupg apt-transport-https curl**
+ apt-get install \-y gnupg apt-transport-https curl
 ```
 1. 
 
 **Install the GPG key:**
 ```bash
- **curl \-s https\://packages-staging.xdrsiem.wazuh.info/key/GPG-KEY-WAZUH | gpg \--no-default-keyring \--keyring gnupg-ring:/usr/share/keyrings/wazuh.gpg \--import && chmod 644 /usr/share/keyrings/wazuh.gpg**
+ curl \-s https\://packages-staging.xdrsiem.wazuh.info/key/GPG-KEY-WAZUH | gpg \--no-default-keyring \--keyring gnupg-ring:/usr/share/keyrings/wazuh.gpg \--import && chmod 644 /usr/share/keyrings/wazuh.gpg
 ```
 2. 
 
 **Add the repository:**
 ```bash
- **echo "deb \[signed-by=/usr/share/keyrings/wazuh.gpg\] https\://packages-staging.xdrsiem.wazuh.info/pre-release/5.x/apt/ unstable main" | tee \-a /etc/apt/sources.list.d/wazuh.list**
+ echo "deb \[signed-by=/usr/share/keyrings/wazuh.gpg\] https\://packages-staging.xdrsiem.wazuh.info/pre-release/5.x/apt/ unstable main" | tee \-a /etc/apt/sources.list.d/wazuh.list
 ```
 3. 
 
 **Update the packages information:**
 ```bash
- **apt-get update**
+ apt-get update
 ```
 4. 
 
@@ -115,7 +115,7 @@ We used wazuh documentation  guide  step by step method
 
  **APTYumDNF**  
  ```bash
-**apt-get \-y install wazuh-indexer**
+apt-get \-y install wazuh-indexer
 ```
 **NOTE: I could not find beta5  so i used the above**
 
@@ -166,14 +166,14 @@ We used wazuh documentation  guide  step by step method
 
 **Run the following commands, replacing `<INDEXER_NODE_NAME>` with the name of the Wazuh indexer node you are configuring as defined in `config.yml`. In our case, the node name is `indexer`. This is to deploy the SSL certificates to encrypt communication between the Wazuh central components:**
 ```bash
- **NODE\_NAME=\<INDEXER\_NODE\_NAME\>**  
- **mkdir \-p /etc/wazuh-indexer/certs**  
-**tar \-xf ./wazuh-certificates.tar \-C /etc/wazuh-indexer/certs/ ./\$NODE\_NAME.pem ./\$NODE\_NAME-key.pem ./admin.pem ./admin-key.pem ./root-ca.pem**  
-**mv \-n /etc/wazuh-indexer/certs/\$NODE\_NAME.pem /etc/wazuh-indexer/certs/indexer.pem**  
-**mv \-n /etc/wazuh-indexer/certs/\$NODE\_NAME-key.pem /etc/wazuh-indexer/certs/indexer-key.pem**  
-**chmod 500 /etc/wazuh-indexer/certs**  
-**chmod 400 /etc/wazuh-indexer/certs/\***  
-**chown \-R wazuh-indexer:wazuh-indexer /etc/wazuh-indexer/certs**
+ NODE\_NAME=\<INDEXER\_NODE\_NAME\>  
+ mkdir \-p /etc/wazuh-indexer/certs
+tar \-xf ./wazuh-certificates.tar \-C /etc/wazuh-indexer/certs/ ./\$NODE\_NAME.pem ./\$NODE\_NAME-key.pem ./admin.pem ./admin-key.pem ./root-ca.pem
+mv \-n /etc/wazuh-indexer/certs/\$NODE\_NAME.pem /etc/wazuh-indexer/certs/indexer.pem
+mv \-n /etc/wazuh-indexer/certs/\$NODE\_NAME-key.pem /etc/wazuh-indexer/certs/indexer-key.pem
+chmod 500 /etc/wazuh-indexer/certs
+chmod 400 /etc/wazuh-indexer/certs/  
+chown \-R wazuh-indexer:wazuh-indexer /etc/wazuh-indexer/certs
 ```
 1. 
 
@@ -187,10 +187,10 @@ We used wazuh documentation  guide  step by step method
 
 **Enable and start the Wazuh indexer service.**
 ```bash
- **SystemdSysV Init**  
-**systemctl daemon-reload**  
-**systemctl enable wazuh-indexer**  
-**systemctl start wazuh-indexer**
+
+systemctl daemon-reload
+systemctl enable wazuh-indexer
+systemctl start wazuh-indexer
 ```
 > 1. 
 
@@ -212,7 +212,7 @@ We used wazuh documentation  guide  step by step method
 
 **Run the following commands to confirm that the installation is successful. Replace `<WAZUH_INDEXER_IP_ADDRESS>` with the IP address of the Wazuh indexer and enter admin as the password when prompted:**
 ```bash
- **curl \-k \-u admin https\://\<WAZUH\_INDEXER\_IP\_ADDRESS\>:9200**
+ curl \-k \-u admin https\://\<WAZUH\_INDEXER\_IP\_ADDRESS\>:9200
 ```
  **Output**  
 **{**  
@@ -237,7 +237,7 @@ We used wazuh documentation  guide  step by step method
 
 **Run the following command to check if the cluster is working correctly. Replace `<WAZUH_INDEXER_IP_ADDRESS>` with the IP address of the Wazuh indexer and enter admin as the password when prompted:**
 ```bash
- **curl \-k \-u admin https\://\<WAZUH\_INDEXER\_IP\_ADDRESS\>:9200/\_cat/nodes?v**  
+ curl \-k \-u admin https\://\<WAZUH\_INDEXER\_IP\_ADDRESS\>:9200/\_cat/nodes?v
 ```
  **The command produces output similar to the following:**
 
@@ -267,16 +267,16 @@ We used wazuh documentation  guide  step by step method
 
 **Create a new directory for the file that specifies the system limits:**
 ```bash
- **mkdir \-p /etc/systemd/system/wazuh-indexer.service.d/**
+ mkdir \-p /etc/systemd/system/wazuh-indexer.service.d/
 ```
 * 
 
 **Run the following command to create the `wazuh-indexer.conf` file in the newly created directory with the new system limit added:**
 ```bash
- **cat \> /etc/systemd/system/wazuh-indexer.service.d/wazuh-indexer.conf \<\< EOF**  
-**\[Service\]**  
-**LimitMEMLOCK=infinity**  
-**EOF**
+ cat \> /etc/systemd/system/wazuh-indexer.service.d/wazuh-indexer.conf \<\< EOF
+\[Service\] 
+LimitMEMLOCK=infinity 
+EOF
 ```
 * 
 
@@ -297,14 +297,14 @@ We used wazuh documentation  guide  step by step method
 
 **Restart the Wazuh indexer service:**
 ```bash
- **systemctl daemon-reload**  
-**systemctl restart wazuh-indexer**
+ systemctl daemon-reload 
+systemctl restart wazuh-indexer
 ```
 5. 
 
 **Verify that the setting was changed successfully, by running the following command to check that `mlockall` value is set to true:**
 ```bash
- **curl \-k \-u \<INDEXER\_USERNAME\>:\<INDEXER\_PASSWORD\> "https\://\<INDEXER\_IP\_ADDRESS\>:9200/\_nodes?filter\_path=\*\*.mlockall\&pretty"**
+ curl \-k \-u \<INDEXER\_USERNAME\>:\<INDEXER\_PASSWORD\> "https\://\<INDEXER\_IP\_ADDRESS\>:9200/\_nodes?filter\_path=\*\*.mlockall\&pretty"
 ```
  **Output**  
 **{**  
@@ -329,8 +329,8 @@ We used wazuh documentation  guide  step by step method
 
 **APTYumDNF**  
 ```bash
-**sed \-i "s/^deb /\#deb /" /etc/apt/sources.list.d/wazuh.list**  
-**apt update**
+sed \-i "s/^deb /\#deb /" /etc/apt/sources.list.d/wazuh.list 
+apt update
 ```
 ## **Next steps**
 
@@ -357,25 +357,25 @@ We used wazuh documentation  guide  step by step method
 
 **Install the following packages if missing:**
 ```bash
- **apt-get install \-y gnupg apt-transport-https curl**
+ apt-get install \-y gnupg apt-transport-https curl
 ```
 1. 
 
 **Install the GPG key:**
 ```bash
- **curl \-s https\://packages-staging.xdrsiem.wazuh.info/key/GPG-KEY-WAZUH | gpg \--no-default-keyring \--keyring gnupg-ring:/usr/share/keyrings/wazuh.gpg \--import && chmod 644 /usr/share/keyrings/wazuh.gpg**
+ curl \-s https\://packages-staging.xdrsiem.wazuh.info/key/GPG-KEY-WAZUH | gpg \--no-default-keyring \--keyring gnupg-ring:/usr/share/keyrings/wazuh.gpg \--import && chmod 644 /usr/share/keyrings/wazuh.gpg
 ```
 2. 
 
 **Add the repository:**
 ```bash
- **echo "deb \[signed-by=/usr/share/keyrings/wazuh.gpg\] https\://packages-staging.xdrsiem.wazuh.info/pre-release/5.x/apt/ unstable main" | tee \-a /etc/apt/sources.list.d/wazuh.list**
+ echo "deb \[signed-by=/usr/share/keyrings/wazuh.gpg\] https\://packages-staging.xdrsiem.wazuh.info/pre-release/5.x/apt/ unstable main" | tee \-a /etc/apt/sources.list.d/wazuh.list
 ```
 3. 
 
 **Update the packages information:**
 ```bash
- **apt-get update**
+ apt-get update
 ```
 4. 
 
@@ -385,7 +385,7 @@ We used wazuh documentation  guide  step by step method
 
  **APTYumDNF**  
  ```bash
-**apt-get \-y install wazuh-manager**
+apt-get \-y install wazuh-manager
 ```
 **I could not find 5 beta so i used the above**
 
@@ -399,19 +399,19 @@ We used wazuh documentation  guide  step by step method
 
 **Replace `<MANAGER_NODE_NAME>` with your Wazuh manager node certificate name, the same used in `config.yml` when creating the certificates. In our case, the node name is, `manager`. Then move the certificates to their corresponding location:**
 ```bash
- **NODE\_NAME=manager**  
- **mkdir /var/wazuh-manager/etc/certs**  
-**tar \-xf wazuh-certificates.tar \-C /var/wazuh-manager/etc/certs/ ./\$NODE\_NAME.pem ./\$NODE\_NAME-key.pem ./root-ca.pem**  
-**mv /var/wazuh-manager/etc/certs/\$NODE\_NAME.pem /var/wazuh-manager/etc/certs/indexer-connector.pem**  
-**mv /var/wazuh-manager/etc/certs/\$NODE\_NAME-key.pem /var/wazuh-manager/etc/certs/indexer-connector-key.pem**  
-**chown root:wazuh-manager \\**  
-    **/var/wazuh-manager/etc/certs/root-ca.pem \\**  
-    **/var/wazuh-manager/etc/certs/indexer-connector.pem \\**  
-    **/var/wazuh-manager/etc/certs/indexer-connector-key.pem**  
-**chmod 640 \\**  
-    **/var/wazuh-manager/etc/certs/root-ca.pem \\**  
-    **/var/wazuh-manager/etc/certs/indexer-connector.pem \\**  
-    **/var/wazuh-manager/etc/certs/indexer-connector-key.pem**
+ NODE\_NAME=manager**  
+ mkdir /var/wazuh-manager/etc/certs  
+tar \-xf wazuh-certificates.tar \-C /var/wazuh-manager/etc/certs/ ./\$NODE\_NAME.pem ./\$NODE\_NAME-key.pem ./root-ca.pem 
+mv /var/wazuh-manager/etc/certs/\$NODE\_NAME.pem /var/wazuh-manager/etc/certs/indexer-connector.pem
+mv /var/wazuh-manager/etc/certs/\$NODE\_NAME-key.pem /var/wazuh-manager/etc/certs/indexer-connector-key.pem
+chown root:wazuh-manager \\
+  /var/wazuh-manager/etc/certs/root-ca.pem \\
+  /var/wazuh-manager/etc/certs/indexer-connector.pem \\
+  /var/wazuh-manager/etc/certs/indexer-connector-key.pem
+chmod 640 \\
+    /var/wazuh-manager/etc/certs/root-ca.pem \\  
+    /var/wazuh-manager/etc/certs/indexer-connector.pem \\
+    /var/wazuh-manager/etc/certs/indexer-connector-key.pem
 ```
 1. 
 
@@ -419,8 +419,8 @@ We used wazuh documentation  guide  step by step method
 
 **Save the Wazuh indexer username and password into the Wazuh manager keystore using the wazuh-manager-keystore tool. Replace `<WAZUH_INDEXER_USERNAME>` and `<WAZUH_INDEXER_PASSWORD>` with the Wazuh indexer username and password:**
 ```bash
- **echo '\<WAZUH\_INDEXER\_USERNAME\>' | /var/wazuh-manager/bin/wazuh-manager-keystore \-f indexer \-k username**  
-**echo '\<WAZUH\_INDEXER\_PASSWORD\>' | /var/wazuh-manager/bin/wazuh-manager-keystore \-f indexer \-k password**
+ echo '\<WAZUH\_INDEXER\_USERNAME\>' | /var/wazuh-manager/bin/wazuh-manager-keystore \-f indexer \-k username
+echo '\<WAZUH\_INDEXER\_PASSWORD\>' | /var/wazuh-manager/bin/wazuh-manager-keystore \-f indexer \-k password
 ```
 1. **NOTE THE DEFAULT USERNAME AND PASSWORD FOR SAVING TO THE KEYSTORE**
 
@@ -463,9 +463,9 @@ We used wazuh documentation  guide  step by step method
 
  **SystemdSysV Init**  
  ```bash
-**systemctl daemon-reload**  
-**systemctl enable wazuh-manager**  
-**systemctl start wazuh-manager**
+systemctl daemon-reload
+systemctl enable wazuh-manager 
+systemctl start wazuh-manager
 ```
 1. 
 
@@ -473,7 +473,7 @@ We used wazuh documentation  guide  step by step method
 
  **SystemdSysV init**  
  ```bash
-**systemctl status wazuh-manager**
+systemctl status wazuh-manager
 ```
 2. 
 
@@ -507,7 +507,7 @@ We used wazuh documentation  guide  step by step method
 
  **SystemdSysV Init**  
  ```bash
-**systemctl restart wazuh-manager**
+systemctl restart wazuh-manager
 ```
 2. 
 
@@ -515,7 +515,7 @@ We used wazuh documentation  guide  step by step method
 
  **SystemdSysV Init**  
  ```bash
-**systemctl restart wazuh-manager**
+systemctl restart wazuh-manager
 ```
 1. 
 
@@ -525,7 +525,7 @@ We used wazuh documentation  guide  step by step method
 
 **Run the following command to verify that the Wazuh cluster is enabled and all the nodes are connected:**
 ```bash
-**/var/wazuh-manager/bin/cluster\_control \-l**
+/var/wazuh-manager/bin/cluster\_control \-l
 ```
 **An example output of the command looks as follows:**
 
@@ -547,8 +547,8 @@ We used wazuh documentation  guide  step by step method
 
 **APTYumDNF**  
 ```bash
-**sed \-i "s/^deb /\#deb /" /etc/apt/sources.list.d/wazuh.list**  
-**apt update**
+sed \-i "s/^deb /\#deb /" /etc/apt/sources.list.d/wazuh.list  
+apt update
 ```
 
 
@@ -570,7 +570,7 @@ We used wazuh documentation  guide  step by step method
 
  **APTYumDNF**  
  ```bash
-**apt-get install \-y debhelper tar curl libcap2-bin \#debhelper version 9 or later**
+apt-get install \-y debhelper tar curl libcap2-bin \#debhelper version 9 or later
 ```
 1. 
 
@@ -584,25 +584,25 @@ We used wazuh documentation  guide  step by step method
 
 **Install the following packages if missing:**
 ```bash
- **apt-get install \-y gnupg apt-transport-https curl**
+ apt-get install \-y gnupg apt-transport-https curl
 ```
 1. 
 
 **Install the GPG key:**
 ```bash
- **curl \-s https\://packages-staging.xdrsiem.wazuh.info/key/GPG-KEY-WAZUH | gpg \--no-default-keyring \--keyring gnupg-ring:/usr/share/keyrings/wazuh.gpg \--import && chmod 644 /usr/share/keyrings/wazuh.gpg**
+curl \-s https\://packages-staging.xdrsiem.wazuh.info/key/GPG-KEY-WAZUH | gpg \--no-default-keyring \--keyring gnupg-ring:/usr/share/keyrings/wazuh.gpg \--import && chmod 644 /usr/share/keyrings/wazuh.gpg
 ```
 2. 
 
 **Add the repository:**
 ```bash
- **echo "deb \[signed-by=/usr/share/keyrings/wazuh.gpg\] https\://packages-staging.xdrsiem.wazuh.info/pre-release/5.x/apt/ unstable main" | tee \-a /etc/apt/sources.list.d/wazuh.list**
+ echo "deb \[signed-by=/usr/share/keyrings/wazuh.gpg\] https\://packages-staging.xdrsiem.wazuh.info/pre-release/5.x/apt/ unstable main" | tee \-a /etc/apt/sources.list.d/wazuh.list
 ```
 3. 
 
 **Update the packages information:**
 ```bash
- **apt-get update**
+ apt-get update
 ```
 4. 
 
@@ -612,7 +612,7 @@ We used wazuh documentation  guide  step by step method
 
  **APTYumDNF**  
  ```bash
-**apt-get \-y install wazuh-dashboard**
+apt-get \-y install wazuh-dashboard
 ```
 1. 
 
@@ -651,14 +651,14 @@ We used wazuh documentation  guide  step by step method
 
 **Replace `<DASHBOARD_NODE_NAME>` with your Wazuh dashboard node name, the same one used in the `config.yml` file to create the certificates. In our case, the node name is, `dashboard`. Then move the certificates to their corresponding location:**
 ```bash
- **NODE\_NAME= dashbord**  
- **mkdir /etc/wazuh-dashboard/certs**  
-**tar \-xf ./wazuh-certificates.tar \-C /etc/wazuh-dashboard/certs/ ./\$NODE\_NAME.pem ./\$NODE\_NAME-key.pem ./root-ca.pem**  
-**\[ \! \-e /etc/wazuh-dashboard/certs/dashboard.pem \] && mv \-n /etc/wazuh-dashboard/certs/\$NODE\_NAME.pem /etc/wazuh-dashboard/certs/dashboard.pem**  
-**\[ \! \-e /etc/wazuh-dashboard/certs/dashboard-key.pem \] && mv \-n /etc/wazuh-dashboard/certs/\$NODE\_NAME-key.pem /etc/wazuh-dashboard/certs/dashboard-key.pem**  
-**chmod 500 /etc/wazuh-dashboard/certs**  
-**chmod 400 /etc/wazuh-dashboard/certs/\***  
-**chown \-R wazuh-dashboard:wazuh-dashboard /etc/wazuh-dashboard/certs**
+ NODE\_NAME= dashbord  
+ mkdir /etc/wazuh-dashboard/certs 
+ tar \-xf ./wazuh-certificates.tar \-C /etc/wazuh-dashboard/certs/ ./\$NODE\_NAME.pem ./\$NODE\_NAME-key.pem ./root-ca.pem
+ \[ \! \-e /etc/wazuh-dashboard/certs/dashboard.pem \] && mv \-n /etc/wazuh-dashboard/certs/\$NODE\_NAME.pem /etc/wazuh-dashboard/certs/dashboard.pem 
+ \[ \! \-e /etc/wazuh-dashboard/certs/dashboard-key.pem \] && mv \-n /etc/wazuh-dashboard/certs/\$NODE\_NAME-key.pem /etc/wazuh-dashboard/certs/dashboard-key.pem
+ chmod 500 /etc/wazuh-dashboard/certs
+ chmod 400 /etc/wazuh-dashboard/certs/\ 
+ chown \-R wazuh-dashboard:wazuh-dashboard /etc/wazuh-dashboard/certs
 ```
 > 1. 
 
@@ -692,13 +692,13 @@ We used wazuh documentation  guide  step by step method
 
 **Download the Wazuh passwords tool:**
 ```bash
- **wget https\://packages-staging.xdrsiem.wazuh.info/pre-release/5.x/installation-assistant/wazuh-passwords-tool-5.0.0-beta5.sh**
+ wget https\://packages-staging.xdrsiem.wazuh.info/pre-release/5.x/installation-assistant/wazuh-passwords-tool-5.0.0-beta5.sh
 ```
 1. 
 
 **To change the password for a Wazuh indexer user, run the passwords tool with the `-u` option and indicate the new password with the `-p` option. The password must have a length between 8 and 64 characters and contain at least one upper case letter, one lower case letter, a number, and one of the following symbols: `.*+?-`.**
 ```bash
- **bash wazuh-passwords-tool-5.0.0-beta5.sh \-u \<USER\> \-p \<PASSWORD\>**
+ bash wazuh-passwords-tool-5.0.0-beta5.sh \-u \<USER\> \-p \<PASSWORD\>
 ```
  **Where `<USER>` is the name of the user whose password you want to change and `<PASSWORD>` is the new password. If `<PASSWORD>` is not specified, the tool will generate a random password.**
 
@@ -722,8 +722,8 @@ We used wazuh documentation  guide  step by step method
 
 **APTYumDNF**  
 ```bash
-**sed \-i "s/^deb /\#deb /" /etc/apt/sources.list.d/wazuh.list**  
-**apt update**
+sed \-i "s/^deb /\#deb /" /etc/apt/sources.list.d/wazuh.list
+apt update
 ```
 
 
@@ -731,15 +731,15 @@ We used wazuh documentation  guide  step by step method
 
 Install gnupg and curl:
 ```bash
-1. **sudo apt-get install gnupg curl**
+1. sudo apt-get install gnupg curl
 ```
 2. **Import the MongoDB public key:**
 
     **Copy**
    ```bash
-    **curl \-fsSL https\://www\.mongodb.org/static/pgp/server-8.0.asc | \\**  
-      **sudo gpg \-o /usr/share/keyrings/mongodb-server-8.0.gpg \\**  
-      **\--dearmor**
+    curl \-fsSL https\://www\.mongodb.org/static/pgp/server-8.0.asc | \\
+      sudo gpg \-o /usr/share/keyrings/mongodb-server-8.0.gpg \\
+      \--dearmor
      ```
 
 4. **Create a list file for MongoDB:**
@@ -748,31 +748,31 @@ Install gnupg and curl:
 
  **Copy**  
  ```
- **echo "deb \[ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg \] https\://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list**
+ echo "deb \[ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg \] https\://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
 ```
 5. **Reload the local package database:**
 
     **Copy**
    ```bash
-    **sudo apt-get update**
+    sudo apt-get update
     ```
 7. **Install the latest stable version of MongoDB:**
 
     **Copy**
    ```bash
-    **sudo apt-get install \-y mongodb-org**
+    sudo apt-get install \-y mongodb-org
     ```
 9. **Hold the currently installed version of the MongoDB package to prevent it from being automatically upgraded to a newer version when updates are installed:**
 
     **Copy**
    ```
-    **sudo apt-mark hold mongodb-org**
+    sudo apt-mark hold mongodb-org
     ```
 11. **Open the MongoDB configuration file:**
 
     **Copy**
     ```bash
-    **sudo nano /etc/mongod.conf**
+    sudo nano /etc/mongod.conf
     ```
    **![][image8]**  
 11. **By default, MongoDB only listens locally.You must modify either the `bindIp` or `bindIpAll` setting in the MongoDB configuration file so that the port binds to an interface address or a host name or listens on all interfaces. See the example configurations below.**
@@ -803,9 +803,9 @@ Install gnupg and curl:
 
      **Copy**
     ```
-     **sudo systemctl daemon-reload**  
-    **sudo systemctl enable mongod.service**  
-    **sudo systemctl start mongod.service**
+     sudo systemctl daemon-reload 
+    sudo systemctl enable mongod.service
+    sudo systemctl start mongod.service
     ```
 
 ## [**Install Data Node**](https://go2docs.graylog.org/current/downloading_and_installing_graylog/ubuntu_installation.htm#InstallDataNode)**🔗**
@@ -820,17 +820,17 @@ Install gnupg and curl:
 
     **Copy**
    ```bash
-    **wget https\://packages.graylog2.org/repo/packages/graylog-7.1-repository\_latest.deb**  
-   **sudo dpkg \-i graylog-7.1-repository\_latest.deb**  
-   **sudo apt-get update**  
-   **sudo apt-get install graylog-datanode**
+    wget https\://packages.graylog2.org/repo/packages/graylog-7.1-repository\_latest.deb
+   sudo dpkg \-i graylog-7.1-repository\_latest.deb
+   sudo apt-get update  
+   sudo apt-get install graylog-datanode
    ```
 
 3. **Ensure that the Linux setting `vm.max_map_count` is set to at least `262144`. To check the current value:**
 
     **Copy**
    ```bash
-    **cat /proc/sys/vm/max\_map\_count**
+    cat /proc/sys/vm/max\_map\_count
    ```
    **![][image9]**
 
@@ -838,16 +838,16 @@ Install gnupg and curl:
 
     **Copy**
    ```bash
-    **echo 'vm.max\_map\_count=262144' | sudo tee \-a /etc/sysctl.d/99-graylog-datanode.conf**  
-   **sudo sysctl \--system**  
-   **cat /proc/sys/vm/max\_map\_count**
+   echo 'vm.max\_map\_count=262144' | sudo tee \-a /etc/sysctl.d/99-graylog-datanode.conf
+   sudo sysctl \--system  
+   cat /proc/sys/vm/max\_map\_count
    ```
 
 5. **Create your `password_secret`. This is a secure, randomly generated string used to encrypt sensitive data within the system:**
 
     **Copy**
    ```bash
-    **openssl rand \-hex 32**
+    openssl rand \-hex 32
    ```
     **Hint: This command uses OpenSSL, a toolkit for TLS/SSL protocols and cryptography, to generate a secure random password. See [the OpenSSL documentation](https://docs.openssl.org/master/) for more information.**
 
@@ -855,7 +855,7 @@ Install gnupg and curl:
 
     **Copy**
    ```bash
-    **sudo nano /etc/graylog/datanode/datanode.conf**
+    sudo nano /etc/graylog/datanode/datanode.conf
      ```
 9. **Add the `password_secret` value to the Data Node configuration file. Note that you must add this same value to the Graylog server configuration file in a later step since it is crucial that this value be the same for the Graylog node.**
 
@@ -863,7 +863,7 @@ Install gnupg and curl:
 
     **Copy**
     ```bash
-    **opensearch\_heap \= 8g**
+    opensearch\_heap \= 8g
 
     **Warning: This configuration property is not included in the `datanode.conf` by default\! It must be added to the file manually.**
     ```
@@ -871,15 +871,15 @@ Install gnupg and curl:
 
     **Copy**
     ```bash
-    **mongodb\_uri \= mongodb://graylog01:27017/graylog**
+    mongodb\_uri \= mongodb://graylog01:27017/graylog
     ```
 14. **Enable Data Node and start the service:**
 
     **Copy**
     ```bash
-    **sudo systemctl daemon-reload**  
-    **sudo systemctl enable graylog-datanode.service**  
-    **sudo systemctl start graylog-datanode**
+    sudo systemctl daemon-reload  
+    sudo systemctl enable graylog-datanode.service  
+    sudo systemctl start graylog-datanode
     ```
     **Parameters to be configured:**
 
@@ -917,7 +917,7 @@ Install gnupg and curl:
 
     **Copy**
    ```bash 
-    **echo \-n "Enter Password: " && head \-1 \</dev/stdin | tr \-d '\\n' | sha256sum | cut \-d" " \-f1**
+    echo \-n "Enter Password: " && head \-1 \</dev/stdin | tr \-d '\\n' | sha256sum | cut \-d" " \-f1
    ```
     **Warning: Do NOT attempt to log into Graylog for the first time using the password you generated in the steps above\! You must complete the preflight login with the credentials found in the log file after first starting the Graylog service. You will be able to login to Graylog with your generated password after the preflight is complete. See [The Web Interface](https://go2docs.graylog.org/current/setting_up_graylog/web_interface.htm#Prefligh) for more information.**
 
@@ -925,7 +925,7 @@ Install gnupg and curl:
 
     **Copy**
    ```bash
-    **sudo nano /etc/graylog/server/server.conf**
+    sudo nano /etc/graylog/server/server.conf
     ```
    ** NOTE I CONFIGURED MY INDEXER TO THE DATANODE BECAUSE OF COMPATIBILITY ISSUES BETWEEN WAZUH5'S OPENSEARCH AND GRAYLOG.
 7. **Enter the value you created for the `root_password_sha2` in the previous step into the Graylog configuration file.**
@@ -936,7 +936,7 @@ Install gnupg and curl:
 
     **Copy**
    ```bash
-    **http\_bind\_address \= 0.0.0.0:9000**
+    http\_bind\_address \= 0.0.0.0:9000
    ```
     **Hint: More information about these settings can be found in [The Web Interface](https://go2docs.graylog.org/current/setting_up_graylog/web_interface.htm).**
 
@@ -950,7 +950,7 @@ Install gnupg and curl:
 
     **Copy**
     ```bash
-    **sudo nano /etc/default/graylog-server**
+    sudo nano /etc/default/graylog-server
     ```
    **NOTE : So  I  created a  certs directory for our java moved the wazuh root ca into it and created graylog certs also we moved all this into the java keystore file:**  
    **NOTE THE BELOW BUT FOR OUR VERSION OF GRAYLOG:**  
@@ -967,15 +967,15 @@ Install gnupg and curl:
 
     **Copy**
    ```bash
-    **GRAYLOG\_SERVER\_JAVA\_OPTS="-Xms1536g \-Xmx1536g \-server \-XX:+UseG1GC \-XX:-OmitStackTraceInFastThrow"**
+    GRAYLOG\_SERVER\_JAVA\_OPTS="-Xms1536g \-Xmx1536g \-server \-XX:+UseG1GC \-XX:-OmitStackTraceInFastThrow"
    ```
 11. **Enable Graylog and start the service:**
 
      **Copy**
     ```bash
-     **sudo systemctl daemon-reload**  
-    **sudo systemctl enable graylog-server.service**  
-    **sudo systemctl start graylog-server.service**
+    sudo systemctl daemon-reload  
+    sudo systemctl enable graylog-server.service  
+    sudo systemctl start graylog-server.service
     ```
     
 **NOTE ON THE UI YOU FIRST CREATE AND DEPLOY A CERTS AUTHORITY THIS CAUSED A MISMATCH WITH OUR ALREADY CREATED CERTS SO WE HAD TO TROUBLE SHOOT THAT AND MAKE INDEXER TRUST OUR CERTS**
@@ -998,7 +998,7 @@ Install gnupg and curl:
 
 **Copy**
 ```bash
-**sudo sh \-c 'curl https\://packages.fluentbit.io/fluentbit.key | gpg \--dearmor \> /usr/share/keyrings/fluentbit-keyring.gpg'**
+sudo sh \-c 'curl https\://packages.fluentbit.io/fluentbit.key | gpg \--dearmor \> /usr/share/keyrings/fluentbit-keyring.gpg'
 ```
 ## **Update your sources lists**
 
@@ -1007,13 +1007,13 @@ Install gnupg and curl:
 **Copy**
 ```bash
 
-**codename=\$(grep \-oP '(?\<=VERSION\_CODENAME=).\*' /etc/os-release 2\>/dev/null || lsb\_release \-cs 2\>/dev/null)**
+codename=\$(grep \-oP '(?\<=VERSION\_CODENAME=).\*' /etc/os-release 2\>/dev/null || lsb\_release \-cs 2\>/dev/null)
 ```
 **Update your source's list:**
 
 **Copy**
 ```bash
-**echo "deb \[signed-by=/usr/share/keyrings/fluentbit-keyring.gpg\] https\://packages.fluentbit.io/ubuntu/\$codename \$codename main" | sudo tee /etc/apt/sources.list.d/fluent-bit.list**
+echo "deb \[signed-by=/usr/share/keyrings/fluentbit-keyring.gpg\] https\://packages.fluentbit.io/ubuntu/\$codename \$codename main" | sudo tee /etc/apt/sources.list.d/fluent-bit.list
 ```
 ### **Update your repositories database**
 
@@ -1021,15 +1021,15 @@ Install gnupg and curl:
 
 **Copy**
 ```bash
-**sudo apt-get update**
+sudo apt-get update
 ```
 **Fluent Bit recommends upgrading your system to avoid potential issues with expired certificates:**
 ```bash
-**`sudo apt-get upgrade`**
+sudo apt-get upgrade`
 ```
 **If you receive the error `Certificate verification failed`, check if the package `ca-certificates` is properly installed:**
 ```bash
-**`sudo apt-get install ca-certificates`**
+sudo apt-get install ca-certificates
 ```
 ## **Install Fluent Bit**
 
@@ -1037,19 +1037,19 @@ Install gnupg and curl:
 2. **Use the following `apt-get` command to install the latest Fluent Bit:**  
    **Copy**
    ```bash
-   **sudo apt-get install fluent-bit**
+   sudo apt-get install fluent-bit
    ```
 
 4. **Instruct `systemd` to enable the service:**  
    **Copy**
    ```bash
-   **sudo systemctl start fluent-bit**
+   sudo systemctl start fluent-bit
     ```
 **If you do a status check, you should see a similar output like this:**
 
 **Copy**
 ```bash
-**\$ systemctl status fluent-bit**
+ systemctl status fluent-bit
 ```
 **● fluent-bit.service \- Fluent Bit**
 
@@ -1090,7 +1090,7 @@ Install gnupg and curl:
 
 **`ALSO:
 ```bash
-sudo tail -n 80 /var/log/td-agent-bit.log`**
+sudo tail -n 80 /var/log/td-agent-bit.log
 ```
 **`![][image20]`**
 
@@ -1148,169 +1148,169 @@ sudo tail -n 80 /var/log/td-agent-bit.log`**
 
 **`Log in to the Wazuh server terminal and copy the entire command below. It tests NVIDIA directly, without changing your Wazuh configuration.`**
 ```bash
-**`read -rsp "Paste your NVIDIA API key: " NVIDIA_API_KEY`**
+read -rsp "Paste your NVIDIA API key: " NVIDIA_API_KEY
 
-**`echo`**
+echo
 
-**`umask 077`**
+umask 077
 
-**`curl -sS \`**
+curl -sS \
 
-  **`-o /tmp/nvidia-api-test.json \`**
+  -o /tmp/nvidia-api-test.json \
 
-  **`-w 'HTTP status: %{http_code}\n' \`**
+  -w 'HTTP status: %{http_code}\n' \`**
 
-  **`https://integrate.api.nvidia.com/v1/chat/completions \`**
+  `https://integrate.api.nvidia.com/v1/chat/completions \
 
-  **`-H "Authorization: Bearer ${NVIDIA_API_KEY}" \`**
+  -H "Authorization: Bearer ${NVIDIA_API_KEY}" \
 
-  **`-H "Content-Type: application/json" \`**
+  `-H "Content-Type: application/json" \
 
-  **`-d '{`**
+  `-d '{`
 
-    **`"model": "z-ai/glm-5.3",`**
+    "model": "z-ai/glm-5.3",
 
-    **`"messages": [`**
+    "messages": [`
 
-      **`{`**
+      `{`
 
-        **`"role": "user",`**
+        `"role": "user",`
 
-        **`"content": "Reply with exactly NVIDIA_OK"`**
+        `"content": "Reply with exactly NVIDIA_OK"
 
-      **`}`**
+      `}`
 
-    **`],`**
+    `],
 
-    **`"max_tokens": 128,`**
+    "max_tokens": 128,
 
-    **`"stream": false`**
+    "stream": false
 
-  **`}'`**
+  `}'
 
-**`unset NVIDIA_API_KEY`**
+unset NVIDIA_API_KEY
 
-**`if command -v jq >/dev/null 2>&1; then`**
+if command -v jq >/dev/null 2>&1; then`**
 
-  **`jq '{`**
+  jq '{
 
-    **`error: .error,`**
+    error: .error,
 
-    **`model: .model,`**
+    `model: .model,
 
-    **`finish_reason: .choices[0].finish_reason,`**
+    finish_reason: .choices[0].finish_reason,
 
-    **`answer: .choices[0].message.content,`**
+    answer: .choices[0].message.content,
 
-    **`answer_present: ((.choices[0].message.content // "") != ""),`**
+    answer_present: ((.choices[0].message.content // "") != ""),
 
-    **`reasoning_present: ((.choices[0].message.reasoning_content // "") != "")`**
+    reasoning_present: ((.choices[0].message.reasoning_content // "") != "")
 
-  **`}' /tmp/nvidia-api-test.json`**
+  }' /tmp/nvidia-api-test.json
 
-**`else`**
+`else`
 
-  **`cat /tmp/nvidia-api-test.json`**
+  cat /tmp/nvidia-api-test.json
 
-**`fi`**
+fi
 ```
 **`Your API key is entered without displaying it, and the command does not print it. The response is saved locally with restricted file permissions.`**
 
 # Next test — Check NVIDIA's tool-calling ability`**
 ```bash
-**`read -rsp "Paste your NVIDIA API key: " NVIDIA_API_KEY`**
+read -rsp "Paste your NVIDIA API key: " NVIDIA_API_KEY
 
-**`echo`**
+echo
 
-**`curl -sS \`**
+curl -sS \
 
-  **`-o /tmp/nvidia-tool-test.json \`**
+  -o /tmp/nvidia-tool-test.json \
 
-  **`-w 'HTTP status: %{http_code}\n' \`**
+  -w 'HTTP status: %{http_code}\n' \
 
-  **`https://integrate.api.nvidia.com/v1/chat/completions \`**
+  https://integrate.api.nvidia.com/v1/chat/completions \
 
-  **`-H "Authorization: Bearer ${NVIDIA_API_KEY}" \`**
+ `-H "Authorization: Bearer ${NVIDIA_API_KEY}" \
 
-  **`-H "Content-Type: application/json" \`**
+  -H "Content-Type: application/json" \
 
-  **`-d '{`**
+  -d '{
 
-    **`"model": "z-ai/glm-5.3",`**
+    "model": "z-ai/glm-5.3",
 
-    **`"messages": [`**
+    "messages": [
 
-      **`{`**
+      {
 
-        **`"role": "user",`**
+        "role": "user",
 
-        **`"content": "Use the search_wazuh_findings tool to find security findings from the last 24 hours. Do not answer from memory."`**
+        "content": "Use the search_wazuh_findings tool to find security findings from the last 24 hours. Do not answer from memory."
 
-      **`}`**
+      }`
 
-    **`],`**
+    `],
 
-    **`"tools": [`**
+    "tools": [
 
-      **`{`**
+      {
 
-        **`"type": "function",`**
+        "type": "function",
 
-        **`"function": {`**
+        "function": {
 
-          **`"name": "search_wazuh_findings",`**
+          "name": "search_wazuh_findings",
 
-          **`"description": "Search Wazuh security findings using a query.",`**
+          "description": "Search Wazuh security findings using a query.",
 
-          **`"parameters": {`**
+          "parameters": {
 
-            **`"type": "object",`**
+            "type": "object",
 
-            **`"properties": {`**
+            "properties": {
 
-              **`"time_range": {`**
+              "time_range": {
 
-                **`"type": "string",`**
+                "type": "string",
 
-                **`"description": "The time range to search, such as last 24 hours."`**
+                "description": "The time range to search, such as last 24 hours."
 
-              **`}`**
+              }
 
-            **`},`**
+            },
 
-            **`"required": ["time_range"]`**
+            "required": ["time_range"]
 
-          **`}`**
+          }
 
-        **`}`**
+        }
 
-      **`}`**
+      }
 
-    **`],`**
+    ],
 
-    **`"tool_choice": "auto",`**
+    "tool_choice": "auto",
 
-    **`"max_tokens": 256,`**
+    "max_tokens": 256,`
 
-    **`"stream": false`**
+    "stream": false
 
-  **`}'`**
+  `}
 
-**`unset NVIDIA_API_KEY`**
+unset NVIDIA_API_KEY
 
-**`jq '{`**
+jq '{
 
-  **`error: .error,`**
+  error: .error,
 
-  **`finish_reason: .choices[0].finish_reason,`**
+  `finish_reason: .choices[0].finish_reason,
 
-  **`answer: .choices[0].message.content,`**
+  `answer: .choices[0].message.content,`
 
-  **`tool_calls: .choices[0].message.tool_calls,`**
+  tool_calls: .choices[0].message.tool_calls,
 
-  **`reasoning_present: ((.choices[0].message.reasoning_content // "") != "")`**
+  reasoning_present: ((.choices[0].message.reasoning_content // "") != "")
 
-**`}' /tmp/nvidia-tool-test.json`**
+}' /tmp/nvidia-tool-test.json
 ```
 
 1. **`Text generation: HTTP 200, with the expected answer NVIDIA_OK.`**  
@@ -1327,39 +1327,24 @@ sudo tail -n 80 /var/log/td-agent-bit.log`**
 
 **`Run this on wazuh5:`**
 ```bash
-**`read -rsp "Paste your NVIDIA API key: " NVIDIA_API_KEY`**
+read -rsp "Paste your NVIDIA API key: " NVIDIA_API_KEY
+echo
 
-**`echo`**
+curl -sS -N --max-time 90 \
+  https://integrate.api.nvidia.com/v1/chat/completions \
+  -H "Authorization: Bearer ${NVIDIA_API_KEY}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "z-ai/glm-5.3",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Reply with exactly NVIDIA_STREAM_OK"
+      }
+    ],
+    "max_tokens": 256,
+    "stream": true
+  }' | tail -n 12
 
-**`curl -sS -N --max-time 90 \`**
-
-  **`https://integrate.api.nvidia.com/v1/chat/completions \`**
-
-  **`-H "Authorization: Bearer ${NVIDIA_API_KEY}" \`**
-
-  **`-H "Content-Type: application/json" \`**
-
-  **`-d '{`**
-
-    **`"model": "z-ai/glm-5.3",`**
-
-    **`"messages": [`**
-
-      **`{`**
-
-        **`"role": "user",`**
-
-        **`"content": "Reply with exactly NVIDIA_STREAM_OK"`**
-
-      **`}`**
-
-    **`],`**
-
-    **`"max_tokens": 256,`**
-
-    **`"stream": true`**
-
-  **`}' | tail -n 12`**
-
-**`unset NVIDIA_API_KEY`**
-```bash
+unset NVIDIA_API_KEY
+```
