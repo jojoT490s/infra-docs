@@ -23,12 +23,12 @@ from linux_health import (
 
 
 SHEET_MAP = {
-    "Pesaflow": "Pesaflow",
-    "eCitizen": "Sha",
-    "Bizwiz": "Bizwiz",
-    "Internal": "Internal",
-    "DID": "DID",
-    "ETA": "ETA"
+    "instnce1": "1",
+    "instance2": "2",
+    "instance3": "3",
+    "Instaance4": "4",
+    "instance5": "5",
+    "instance6": "6"
 }
 
 from sheets import (
@@ -173,7 +173,7 @@ for instance in GRAFANA_INSTANCES:
 
         time.sleep(3)
 
-        if instance["name"] == "Internal":
+        if instance["name"] == "2":
             cpu_rows = read_linux_health_internal(driver)
         else:
             cpu_rows = read_linux_health(driver)
@@ -216,7 +216,7 @@ for instance in GRAFANA_INSTANCES:
     # Wait for Partition sorting to complete
     time.sleep(10)
 
-    if instance["name"] == "Internal":
+    if instance["name"] == "2":
         partition_rows = read_linux_health_internal(driver)
     else:
         partition_rows = read_linux_health(driver)
