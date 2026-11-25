@@ -1,0 +1,7 @@
+---
+- name: Deploy Grafana Automation
+  hosts: grafana_servers
+  become: yes
+
+  roles:
+    - grafana_automation
