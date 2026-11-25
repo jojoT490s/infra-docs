@@ -10,7 +10,7 @@ from edr_summary import (
 driver = start_browser()
 
 try:
-    instance = GRAFANA_INSTANCES[0]   # Pesaflow
+    instance = GRAFANA_INSTANCES[0]   
 
     print("Opening login...")
     driver.get(instance["base_url"] + "/login")
