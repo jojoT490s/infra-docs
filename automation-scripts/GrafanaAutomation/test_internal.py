@@ -6,7 +6,7 @@ from linux_health import (
 )
 
 # Find the Internal instance
-instance = next(i for i in GRAFANA_INSTANCES if i["name"] == "Internal")
+instance = next(i for i in GRAFANA_INSTANCES if i["name"] == "2")
 
 driver = start_browser()
 
@@ -23,7 +23,7 @@ try:
 
     print("Reading Linux Health...")
 
-    rows = read_linux_health_internal(driver)
+    rows = read_linux_health_2(driver)
 
     print("\nRows returned:\n")
 
