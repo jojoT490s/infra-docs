@@ -7,7 +7,7 @@ from vulnerabilities import (
 
 import time
 
-instance = GRAFANA_INSTANCES[0]      # Pesaflow
+instance = GRAFANA_INSTANCES[0]      
 
 driver = start_browser()
 
